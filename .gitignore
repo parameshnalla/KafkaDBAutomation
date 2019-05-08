@@ -1,0 +1,70 @@
+#
+# Standard .gitignore contents for all projects
+#
+
+# .DS_Store anywhere in the file system
+**/.DS_Store
+
+
+#
+# Build artifacts
+#
+# target and all directories below it
+target/
+out/
+
+# Legacy Ant support ??
+generated
+local
+.ant-targets-build.xml
+# TAGS ???
+
+
+#
+# SCM artifacts
+#
+
+#
+# IDE artifacts
+#
+
+# Intellij
+.idea/
+*.iml
+*.ipr
+*.iws
+
+#
+# Eclipse
+#
+
+.classpath
+.manager
+.project
+.settings
+eclipsetarget
+
+# 
+# Text editors
+#
+
+# Sublime
+*sublime*
+
+#
+# Scala extension modules
+#
+.ensime*
+
+# Configuration files only at the top-level of the application
+#
+/*.yml
+
+*.log
+*.log.gz
+
+#
+# Other
+#
+.history
+
