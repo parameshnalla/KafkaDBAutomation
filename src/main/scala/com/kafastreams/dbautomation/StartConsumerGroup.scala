@@ -1,24 +1,15 @@
 package com.kafastreams.dbautomation
+
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.log4j.Logger
-import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
-
-import com.kafastreams.dbautomation.StartConsumerGroup.pool
-import kafka.server.KafkaConfig
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{Seconds, StreamingContext}
-
-import scala.concurrent.ExecutionContext
 
 
-object StartConsumerGroup extends  App {
-
+object StartConsumerGroup extends App {
 
   val config: Config = ConfigFactory.load()
   val kafkaConsumerConfig = config.getConfig("kafkaProject.kafka_consumer_config")
@@ -41,16 +32,16 @@ object StartConsumerGroup extends  App {
     .map(_.toString)
 
   val consumers = Array(
-    KafkaConsumer(topics,kafkaParams,"consumer1"),
-    KafkaConsumer(topics,kafkaParams,"consumer2")
+    KafkaConsumer(topics, kafkaParams, "consumer1"),
+    KafkaConsumer(topics, kafkaParams, "consumer2")
   )
 
 
   val numberOfConsumerToSpin = kafkaConsumerConfig.getInt("number_consumers_to_start")
   val consumerList = (1 to numberOfConsumerToSpin).toList
   val pool: ExecutorService = Executors.newFixedThreadPool(numberOfConsumerToSpin)
-  consumerList.foreach( consumer =>
-    pool.execute(KafkaConsumer(topics,kafkaParams,s"consumer-$consumer"))
+  consumerList.foreach(consumer =>
+    pool.execute(KafkaConsumer(topics, kafkaParams, s"consumer-$consumer"))
   )
   pool.shutdown()
 }

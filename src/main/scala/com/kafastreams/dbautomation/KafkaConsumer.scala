@@ -3,6 +3,7 @@ package com.kafastreams.dbautomation
 /** *
   * Class to provide KafaConfiguration
   */
+
 import org.apache.spark.sql.SparkSession
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -21,10 +22,11 @@ case class KafkaConsumer(
                           consumerName: String
                         ) extends Thread {
 
+
   override def run() = {
 
     val stream = KafkaUtils.createDirectStream[String, String](
-      KafkaConsumer.ssc,
+      KafkaSpark.ssc,
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParams)
     )
@@ -37,7 +39,7 @@ case class KafkaConsumer(
         val value = x.map(record => record.value().asInstanceOf[String])
 
         val temp2 = value.map(x => x + s"$consumerName")
-        import KafkaConsumer.spark.implicits._
+        import KafkaSpark.spark.implicits._
         val df = temp2.toDF()
         df.coalesce(1)
           .write.format("csv").mode("append").save("/Users/pnalla/myplayground/kafka/temp")
@@ -45,12 +47,13 @@ case class KafkaConsumer(
       }
       else println("RDD is Empty")
     )
-    KafkaConsumer.ssc.start()
-    KafkaConsumer.ssc.awaitTermination()
+    KafkaSpark.ssc.start()
+    KafkaSpark.ssc.awaitTermination()
   }
 
 }
-object KafkaConsumer {
+
+object KafkaSpark {
 
   val spark = SparkSession.builder()
     .master("local")
@@ -58,6 +61,6 @@ object KafkaConsumer {
     .getOrCreate()
   val sc = spark.sparkContext
   val ssc = new StreamingContext(sc, Seconds(1))
-  KafkaConsumer.sc.setLogLevel("ERROR")
+  sc.setLogLevel("ERROR")
   ssc.checkpoint("checkpoint")
 }
