@@ -26,10 +26,10 @@ case class KafkaConsumer(
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParams)
     )
-    println(s"Consumer picked message: $consumerName")
+   // println(s"Consumer picked message: $consumerName")
     stream.foreachRDD(x =>
       if (!x.isEmpty()) {
-        //println("RDD is not empty !!!! count is " + x.count())
+        println("RDD is not empty !!!! count is " + x.count())
 
         val key = x.map(record => record.key().asInstanceOf[String])
         val value = x.map(record => record.value().asInstanceOf[String])
