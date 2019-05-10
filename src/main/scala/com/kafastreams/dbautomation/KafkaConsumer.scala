@@ -29,7 +29,7 @@ case class KafkaConsumer(
     println(s"Consumer picked message: $consumerName")
     stream.foreachRDD(x =>
       if (!x.isEmpty()) {
-        println("RDD is not empty !!!! count is " + x.count())
+        //println("RDD is not empty !!!! count is " + x.count())
 
         val key = x.map(record => record.key().asInstanceOf[String])
         val value = x.map(record => record.value().asInstanceOf[String])
@@ -41,22 +41,10 @@ case class KafkaConsumer(
           .write.format("csv").mode("append").save("/Users/pnalla/myplayground/kafka/temp")
         df.show(100, false)
       }
-      else println("RDD is Empty")
+      //else  println("RDD is Empty")
     )
     KafkaSpark.ssc.start()
     KafkaSpark.ssc.awaitTermination()
   }
 
-}
-
-object KafkaSpark {
-
-  val spark = SparkSession.builder()
-    .master("local")
-    .appName("First Spark Job")
-    .getOrCreate()
-  val sc = spark.sparkContext
-  val ssc = new StreamingContext(sc, Seconds(1))
-  sc.setLogLevel("ERROR")
-  ssc.checkpoint("checkpoint")
 }
