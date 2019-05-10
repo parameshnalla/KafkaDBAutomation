@@ -1,20 +1,16 @@
 package com.kafastreams.dbautomation
 
 /** *
-  * Class to provide KafaConfiguration
+  * Class to provide KafkaConsumer
   */
 
 import org.apache.spark.sql.SparkSession
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.Seconds
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import com.typesafe.config.{Config, ConfigFactory}
-import org.apache.log4j.Logger
-import org.apache.spark.SparkContext
+
 
 case class KafkaConsumer(
                           topics: Array[String],

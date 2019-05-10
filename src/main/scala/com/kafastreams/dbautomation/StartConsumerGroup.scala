@@ -33,7 +33,8 @@ object StartConsumerGroup extends App {
 
   val consumers = Array(
     KafkaConsumer(topics, kafkaParams, "consumer1"),
-    KafkaConsumer(topics, kafkaParams, "consumer2")
+    KafkaConsumer(topics, kafkaParams, "consumer2"),
+    KafkaConsumer(topics, kafkaParams, "consumer3")
   )
 
 
