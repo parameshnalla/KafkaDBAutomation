@@ -26,15 +26,25 @@ object StartConsumerGroup extends App {
     ConsumerConfig.AUTO_OFFSET_RESET_CONFIG -> kafkaConsumerConfig.getString("auto_off_set_config"),
     ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG -> (kafkaConsumerConfig.getBoolean("enable_auto_offset_commit"): java.lang.Boolean)
   )
+
+
+  val jaasTemplate = "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"%s\" password=\"%s\";"
+  val jaasCfg = String.format(jaasTemplate, "ny9wddry", "6xR25HSiFmxFLYYVdlgLE3rsM1df9Uoa")
+  val additionalParams = Map[String, Object](
+    "security.protocol" -> "SASL_SSL",
+    "sasl.mechanism" -> "SCRAM-SHA-256",
+    "sasl.jaas.config" -> jaasCfg
+  )
+
   val topics = kafkaConsumerConfig
     .getStringList("topics")
     .toArray()
     .map(_.toString)
 
   val consumers = Array(
-    KafkaConsumer(topics, kafkaParams, "consumer1"),
-    KafkaConsumer(topics, kafkaParams, "consumer2"),
-    KafkaConsumer(topics, kafkaParams, "consumer3")
+    KafkaConsumer(topics, kafkaParams++additionalParams, "consumer1"),
+    KafkaConsumer(topics, kafkaParams++additionalParams, "consumer2"),
+    KafkaConsumer(topics, kafkaParams++additionalParams, "consumer3")
   )
 
 
@@ -42,7 +52,7 @@ object StartConsumerGroup extends App {
   val consumerList = (1 to numberOfConsumerToSpin).toList
   val pool: ExecutorService = Executors.newFixedThreadPool(numberOfConsumerToSpin)
   consumerList.foreach(consumer =>
-    pool.execute(KafkaConsumer(topics, kafkaParams, s"consumer-$consumer"))
+    pool.execute(KafkaConsumer(topics, kafkaParams ++ additionalParams, s"consumer-$consumer"))
   )
   pool.shutdown()
 }

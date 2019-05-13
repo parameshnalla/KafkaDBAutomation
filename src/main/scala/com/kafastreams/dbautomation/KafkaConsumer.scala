@@ -41,7 +41,7 @@ case class KafkaConsumer(
           .write.format("csv").mode("append").save("/Users/pnalla/myplayground/kafka/temp")
         df.show(100, false)
       }
-      //else  println("RDD is Empty")
+      else  println("RDD is Empty")
     )
     KafkaSpark.ssc.start()
     KafkaSpark.ssc.awaitTermination()
