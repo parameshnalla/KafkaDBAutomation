@@ -56,6 +56,7 @@ object StartConsumerGroup extends App {
 
   val numberOfConsumerToSpin = kafkaConsumerConfig.getInt("number_consumers_to_start")
   val consumerList = (1 to numberOfConsumerToSpin).toList
+  // Creating the threadpool based on the config we provided.
   val pool: ExecutorService = Executors.newFixedThreadPool(numberOfConsumerToSpin)
   // Starting the consumers based on property file.
   consumerList.foreach(consumer =>
