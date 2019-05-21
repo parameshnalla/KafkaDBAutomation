@@ -13,6 +13,7 @@ object StartConsumerGroup extends App {
 
   val config: Config = ConfigFactory.load()
   val kafkaConsumerConfig = config.getConfig("kafkaProject.kafka_consumer_config")
+  val zooKeeperURL = kafkaConsumerConfig.getString("zookeeper_server")
 
   val kafkaParams = Map[String, Object](
     ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> kafkaConsumerConfig

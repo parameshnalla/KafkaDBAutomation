@@ -1,9 +1,11 @@
 package com.kafastreams.dbautomation
-
-import com.kafastreams.dbautomation.StartConsumerGroup.config
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
+/***
+  * KafkaSpark builder,
+  * this object is central place for creating the spark context and maintaining.
+  */
 object KafkaSpark {
   val spark = SparkSession.builder()
     .master("local")
