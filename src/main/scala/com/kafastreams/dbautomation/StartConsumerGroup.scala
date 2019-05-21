@@ -9,6 +9,21 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
+/**
+  * Basic flow of this POC and the code.
+  * Get the message from the Kafka topic
+  * process the message then write to phoenix table (Data written into the Hbase table through phoneix)
+  * commit the offset in kafka.
+  */
+
+/***
+  * This object is the main program to start our consumer group.
+  * Number consumers spin based on the configuration we set in the configuration file.
+  * (number_consumers_to_start).
+  * By changing the this property we can increase the number consumers.
+  * We are using the Executor service to spin multiple consumers effectively.
+  * We will create these consumers and add them into the executor pool to start the consumers.
+  */
 object StartConsumerGroup extends App {
 
   val config: Config = ConfigFactory.load()
@@ -42,6 +57,7 @@ object StartConsumerGroup extends App {
   val numberOfConsumerToSpin = kafkaConsumerConfig.getInt("number_consumers_to_start")
   val consumerList = (1 to numberOfConsumerToSpin).toList
   val pool: ExecutorService = Executors.newFixedThreadPool(numberOfConsumerToSpin)
+  // Starting the consumers based on property file.
   consumerList.foreach(consumer =>
     pool.execute(KafkaConsumer(topics, kafkaParams, s"consumer-$consumer"))
   )
