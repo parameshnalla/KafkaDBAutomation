@@ -48,13 +48,23 @@ case class KafkaConsumer(
             val offsetRanges = records.asInstanceOf[HasOffsetRanges].offsetRanges
             val key = records.map(record => record.key().asInstanceOf[String])
             val value = records.map(record => record.value().asInstanceOf[String])
-
+            
+           
+            //CHECK01: Printing each record from DStreams for Testing
+            value.foreach(x => println("Testing Record String : " +x))
+           
             // Just for testing added consumername to kafka message value.
             // This needs to be updated while running on POC data.
-            val recordValue = value.map(x => x + s"$consumerName")
+            val recordValue = value.map(x => x)
             import KafkaSpark.spark.implicits._
             val df = recordValue.toDF()
+            
+            //CHECK02: Print the count of dataframe
+             print("Dataframe count: " +df.count())
 
+            //CHECK03: Print the dataframe
+             df.collect().foreach( record => println("record =>" +record))
+           
             // Performing the upsert(Update/Insert) to the phoenix table.
             /*df.write.format("org.apache.phoenix.spark")
               .mode(SaveMode.Overwrite).options(
