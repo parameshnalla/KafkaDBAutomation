@@ -109,4 +109,3 @@ case class KafkaConsumer(
   }
 
 }
-
